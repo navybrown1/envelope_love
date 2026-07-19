@@ -7,9 +7,12 @@
   const nativeGet = Storage.prototype.getItem;
   const nativeSet = Storage.prototype.setItem;
   const nativeRemove = Storage.prototype.removeItem;
+  const hadLocalSaveAtBoot = nativeGet.call(localStorage, SAVE_KEY) !== null;
   let revision = Number(nativeGet.call(localStorage, REV_KEY) || 0);
   let syncTimer = 0;
   let syncing = false;
+  let initialSyncComplete = false;
+  let pendingLocalWrite = false;
   let statusEl;
 
   const setStatus = (text, tone = '') => {
@@ -60,11 +63,61 @@
   };
 
   const applyRemote = remote => {
+    pendingLocalWrite = false;
+    clearTimeout(syncTimer);
     const local = readLocal();
     if (local) nativeSet.call(localStorage, `${SAVE_KEY}-backup-${Date.now()}`, JSON.stringify(local));
     nativeSet.call(localStorage, SAVE_KEY, JSON.stringify(remote));
     sessionStorage.setItem('pocket-bloom-cloud-reloaded', '1');
     location.reload();
+  };
+
+  const pull = async ({ initial = false, preferRemote = false } = {}) => {
+    if (syncing || !navigator.onLine) return;
+    syncing = true;
+    setStatus('Checking cloud…');
+    try {
+      const result = await request({ action: 'load' });
+      const local = readLocal();
+      if (!result.found) {
+        if (local) await push({ force: true, nested: true });
+        else setStatus('Cloud ready', 'good');
+        return;
+      }
+      revision = Number(result.save.revision || 0);
+      nativeSet.call(localStorage, REV_KEY, String(revision));
+      const remote = result.save.state;
+      if (remote && (preferRemote || (initial && !hadLocalSaveAtBoot))) {
+        setStatus('Cloud pet found. Loading…', 'good');
+        applyRemote(remote);
+        return;
+      }
+      const localTime = Number(local?.lastTick || 0);
+      const remoteTime = Number(remote?.lastTick || 0);
+      if (!local || remoteTime > localTime + 1000) {
+        setStatus('Newer pet found. Loading…', 'good');
+        applyRemote(remote);
+        return;
+      }
+      if (localTime > remoteTime + 1000) await push({ force: true, nested: true });
+      else setStatus('Synced', 'good');
+      if (initial && sessionStorage.getItem('pocket-bloom-cloud-reloaded')) {
+        sessionStorage.removeItem('pocket-bloom-cloud-reloaded');
+        setStatus('Pet restored from cloud', 'good');
+      }
+    } catch (error) {
+      console.error('Pocket Bloom cloud pull failed', error);
+      setStatus(navigator.onLine ? 'Cloud unavailable — saved locally' : 'Offline — saved locally', 'warn');
+    } finally {
+      syncing = false;
+      if (initial) {
+        initialSyncComplete = true;
+        if (pendingLocalWrite) {
+          pendingLocalWrite = false;
+          schedulePush();
+        }
+      }
+    }
   };
 
   const push = async ({ force = false, nested = false } = {}) => {
@@ -105,41 +158,8 @@
     } finally { if (!nested) syncing = false; }
   };
 
-  const pull = async ({ initial = false } = {}) => {
-    if (syncing || !navigator.onLine) return;
-    syncing = true;
-    setStatus('Checking cloud…');
-    try {
-      const result = await request({ action: 'load' });
-      const local = readLocal();
-      if (!result.found) {
-        if (local) await push({ force: true, nested: true });
-        else setStatus('Cloud ready', 'good');
-        return;
-      }
-      revision = Number(result.save.revision || 0);
-      nativeSet.call(localStorage, REV_KEY, String(revision));
-      const remote = result.save.state;
-      const localTime = Number(local?.lastTick || 0);
-      const remoteTime = Number(remote?.lastTick || 0);
-      if (!local || remoteTime > localTime + 1000) {
-        setStatus('Newer pet found. Loading…', 'good');
-        applyRemote(remote);
-        return;
-      }
-      if (localTime > remoteTime + 1000) await push({ force: true, nested: true });
-      else setStatus('Synced', 'good');
-      if (initial && sessionStorage.getItem('pocket-bloom-cloud-reloaded')) {
-        sessionStorage.removeItem('pocket-bloom-cloud-reloaded');
-        setStatus('Pet restored from cloud', 'good');
-      }
-    } catch (error) {
-      console.error('Pocket Bloom cloud pull failed', error);
-      setStatus(navigator.onLine ? 'Cloud unavailable — saved locally' : 'Offline — saved locally', 'warn');
-    } finally { syncing = false; }
-  };
-
   const schedulePush = () => {
+    if (!initialSyncComplete) { pendingLocalWrite = true; return; }
     clearTimeout(syncTimer);
     syncTimer = setTimeout(() => push(), 900);
   };
@@ -175,7 +195,7 @@
       nativeSet.call(localStorage, REV_KEY, '0');
       revision = 0;
       if (keyEl) keyEl.textContent = next;
-      await pull({ initial: true });
+      await pull({ initial: true, preferRemote: true });
     });
   };
 
