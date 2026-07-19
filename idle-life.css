@@ -1,0 +1,72 @@
+/* Pocket Bloom natural idle behavior layer */
+.pet.visible:not(.sleeping):not([class*="activity-"]) {
+  animation: none !important;
+  transform-origin: 50% 88%;
+}
+.pet.visible.sad:not(.sleeping):not([class*="activity-"]),
+.pet.visible.sick:not(.sleeping):not([class*="activity-"]) {
+  animation: none !important;
+}
+
+.pet.pb-idle-blink .eye { animation: pbBlink .72s ease-in-out both; }
+.pet.pb-idle-look-left .eye { animation: pbLookLeft 1.25s ease-in-out both; }
+.pet.pb-idle-look-right .eye { animation: pbLookRight 1.25s ease-in-out both; }
+.pet.pb-idle-breathe { animation: pbBreathe 1.8s ease-in-out both !important; }
+.pet.pb-idle-stretch { animation: pbStretch 1.75s cubic-bezier(.2,.8,.25,1) both !important; }
+.pet.pb-idle-stretch .ear.left { animation: pbEarLeft 1.75s ease-in-out both; }
+.pet.pb-idle-stretch .ear.right { animation: pbEarRight 1.75s ease-in-out both; }
+.pet.pb-idle-hop { animation: pbHop 1.25s cubic-bezier(.2,.75,.25,1) both !important; }
+.pet.pb-idle-smile { animation: pbSmileBody 1.45s ease-in-out both !important; }
+.pet.pb-idle-smile .mouth { animation: pbSmileMouth 1.45s ease-in-out both; }
+.pet.pb-idle-curious { animation: pbCurious 1.7s ease-in-out both !important; }
+.pet.pb-idle-curious .eye { animation: pbCuriousEyes 1.7s ease-in-out both; }
+.pet.pb-idle-yawn { animation: pbYawnBody 2.25s ease-in-out both !important; }
+.pet.pb-idle-yawn .mouth { animation: pbYawnMouth 2.25s ease-in-out both; }
+.pet.pb-idle-sniff { animation: pbSniff 1.55s ease-in-out both !important; }
+.pet.pb-idle-scratch { animation: pbScratch 1.85s ease-in-out both !important; }
+.pet.pb-idle-scratch .ear.right { animation: pbScratchEar 1.85s ease-in-out both; }
+.pet.pb-idle-sigh { animation: pbSigh 2s ease-in-out both !important; }
+.pet.pb-idle-shiver { animation: pbShiver 1.5s ease-in-out both !important; }
+.pet.pb-idle-dance { animation: pbDance 2.65s cubic-bezier(.2,.75,.25,1) both !important; }
+.pet.pb-idle-daydream { animation: pbDaydream 2.8s ease-in-out both !important; }
+.pet.pb-idle-daydream .eye { animation: pbDreamEyes 2.8s ease-in-out both; }
+
+.pb-idle-symbol {
+  position:absolute;
+  z-index:12;
+  pointer-events:none;
+  left:50%;
+  top:27%;
+  translate:-50% -50%;
+  font-size:1.35rem;
+  filter:drop-shadow(0 2px 0 rgba(255,255,255,.75));
+  animation:pbSymbol 2.5s ease-out both;
+}
+
+@keyframes pbBlink { 0%,36%,64%,100%{transform:scaleY(1)} 46%,54%{transform:scaleY(.12)} }
+@keyframes pbLookLeft { 0%,18%,82%,100%{transform:translateX(0)} 32%,68%{transform:translateX(-5px)} }
+@keyframes pbLookRight { 0%,18%,82%,100%{transform:translateX(0)} 32%,68%{transform:translateX(5px)} }
+@keyframes pbBreathe { 0%,100%{transform:translateY(0) scale(1)} 48%{transform:translateY(-2px) scale(1.025,.98)} }
+@keyframes pbStretch { 0%,100%{transform:translateY(0) scale(1)} 25%{transform:translateY(4px) scale(1.06,.92)} 56%{transform:translateY(-7px) scale(.96,1.1)} 76%{transform:translateY(-2px) scale(1.02,.98)} }
+@keyframes pbEarLeft { 0%,100%{transform:rotate(0)} 45%{transform:rotate(-15deg)} }
+@keyframes pbEarRight { 0%,100%{transform:rotate(0)} 45%{transform:rotate(15deg)} }
+@keyframes pbHop { 0%,100%{transform:translateY(0) rotate(0)} 23%{transform:translateY(-13px) rotate(-4deg)} 46%{transform:translateY(0) rotate(2deg)} 66%{transform:translateY(-7px) rotate(4deg)} 84%{transform:translateY(0) rotate(-1deg)} }
+@keyframes pbSmileBody { 0%,100%{transform:translateY(0)} 45%{transform:translateY(-4px) scale(1.025)} }
+@keyframes pbSmileMouth { 0%,100%{} 28%,72%{height:15px;background:var(--screen-dark);border:0;border-radius:0 0 12px 12px} }
+@keyframes pbCurious { 0%,100%{transform:rotate(0) translateY(0)} 28%,72%{transform:rotate(-7deg) translateY(-2px)} }
+@keyframes pbCuriousEyes { 0%,100%{transform:translate(0)} 35%,68%{transform:translate(-2px,-2px) scale(1.08)} }
+@keyframes pbYawnBody { 0%,100%{transform:translateY(0) scale(1)} 25%{transform:translateY(3px) scale(1.03,.96)} 48%,72%{transform:translateY(-3px) scale(.98,1.06)} }
+@keyframes pbYawnMouth { 0%,18%,88%,100%{} 35%,72%{width:18px;height:22px;left:49px;top:66px;border:5px solid var(--screen-dark);border-radius:50%;background:transparent;transform:none} }
+@keyframes pbSniff { 0%,100%{transform:translate(0)} 25%{transform:translate(-4px,-2px) rotate(-2deg)} 38%{transform:translate(3px,-1px) rotate(2deg)} 53%{transform:translate(-2px,-2px)} 70%{transform:translate(4px,0)} }
+@keyframes pbScratch { 0%,100%{transform:rotate(0) translateY(0)} 20%{transform:rotate(4deg) translateY(1px)} 35%{transform:rotate(-3deg)} 50%{transform:rotate(4deg)} 65%{transform:rotate(-3deg)} 80%{transform:rotate(2deg)} }
+@keyframes pbScratchEar { 0%,100%{transform:rotate(0)} 25%,45%,65%{transform:rotate(18deg)} 35%,55%,75%{transform:rotate(2deg)} }
+@keyframes pbSigh { 0%,100%{transform:translateY(0) scale(1)} 30%{transform:translateY(3px) scale(1.02,.97)} 58%{transform:translateY(5px) scale(.98,.95)} 78%{transform:translateY(2px)} }
+@keyframes pbShiver { 0%,100%{transform:translateX(0) rotate(0)} 12%,36%,60%,84%{transform:translateX(-3px) rotate(-1.5deg)} 24%,48%,72%{transform:translateX(3px) rotate(1.5deg)} }
+@keyframes pbDance { 0%,100%{transform:translateY(0) rotate(0) scale(1)} 14%{transform:translateY(-9px) rotate(-7deg) scale(1.03)} 28%{transform:translateY(0) rotate(7deg)} 43%{transform:translateY(-11px) rotate(5deg) scale(1.04)} 58%{transform:translateY(0) rotate(-7deg)} 73%{transform:translateY(-7px) rotate(-3deg)} 88%{transform:translateY(0) rotate(3deg)} }
+@keyframes pbDaydream { 0%,100%{transform:translateY(0) rotate(0)} 30%,72%{transform:translateY(-3px) rotate(-4deg)} }
+@keyframes pbDreamEyes { 0%,100%{height:14px} 26%,76%{height:5px;top:55px;border-radius:0;border-bottom:4px solid var(--screen-dark);background:transparent} }
+@keyframes pbSymbol { 0%{opacity:0;transform:translateY(8px) scale(.7)} 18%,70%{opacity:1} 100%{opacity:0;transform:translateY(-28px) scale(1.12)} }
+
+body.reduce-motion .pet[class*="pb-idle-"] { animation-duration:.01ms !important; }
+body.reduce-motion .pet[class*="pb-idle-"] * { animation-duration:.01ms !important; }
+body.reduce-motion .pb-idle-symbol { display:none !important; }
