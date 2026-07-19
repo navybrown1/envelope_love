@@ -1,0 +1,83 @@
+/* Pocket Bloom classic poop-care loop */
+.pb-poop-zone {
+  position:absolute;
+  z-index:7;
+  left:50%;
+  bottom:18%;
+  width:170px;
+  height:54px;
+  transform:translateX(-50%);
+  pointer-events:none;
+}
+
+.pb-poop {
+  position:absolute;
+  bottom:0;
+  width:34px;
+  height:31px;
+  display:grid;
+  place-items:center;
+  font-size:1.55rem;
+  line-height:1;
+  filter:drop-shadow(0 4px 0 rgba(41,35,49,.18));
+  transform-origin:50% 100%;
+  animation:pbPoopArrive .72s cubic-bezier(.2,.9,.25,1.15) both;
+}
+.pb-poop:nth-child(1){left:15px;rotate:-5deg}
+.pb-poop:nth-child(2){left:68px;rotate:4deg;animation-delay:.08s}
+.pb-poop:nth-child(3){right:14px;rotate:-2deg;animation-delay:.16s}
+.pb-poop.pb-poop-cleaning { animation:pbPoopClean .72s ease-in both; }
+
+.pb-poop-alert {
+  position:absolute;
+  z-index:14;
+  top:16%;
+  left:50%;
+  translate:-50% 0;
+  padding:5px 9px;
+  border:3px solid var(--screen-dark);
+  border-radius:8px;
+  background:#fff7cf;
+  color:var(--screen-dark);
+  font:900 .72rem ui-monospace,monospace;
+  text-transform:uppercase;
+  letter-spacing:.02em;
+  box-shadow:3px 3px 0 rgba(47,41,64,.2);
+  pointer-events:none;
+  animation:pbPoopAlert 2.1s ease both;
+}
+
+.pet.pb-poop-notice { animation:pbPoopNotice 1.35s ease-in-out both !important; }
+.pet.pb-poop-notice .eye { animation:pbPoopEyes 1.35s ease-in-out both; }
+
+@keyframes pbPoopArrive {
+  0%{opacity:0;transform:translateY(-28px) scale(.45) rotate(-12deg)}
+  58%{opacity:1;transform:translateY(3px) scale(1.15) rotate(5deg)}
+  78%{transform:translateY(-3px) scale(.96) rotate(-2deg)}
+  100%{opacity:1;transform:translateY(0) scale(1) rotate(0)}
+}
+@keyframes pbPoopClean {
+  0%{opacity:1;transform:translateY(0) scale(1) rotate(0)}
+  45%{opacity:1;transform:translateY(-12px) scale(.8) rotate(16deg)}
+  100%{opacity:0;transform:translateY(-30px) scale(.25) rotate(45deg)}
+}
+@keyframes pbPoopAlert {
+  0%{opacity:0;transform:translateY(8px) scale(.8)}
+  16%,72%{opacity:1;transform:translateY(0) scale(1)}
+  100%{opacity:0;transform:translateY(-10px) scale(.95)}
+}
+@keyframes pbPoopNotice {
+  0%,100%{transform:translateY(0) rotate(0)}
+  28%{transform:translateY(-4px) rotate(-5deg)}
+  58%{transform:translateY(1px) rotate(5deg)}
+  78%{transform:translateY(-2px) rotate(-2deg)}
+}
+@keyframes pbPoopEyes {
+  0%,100%{transform:translate(0)}
+  25%,72%{transform:translate(3px,3px) scale(.92)}
+}
+
+body.reduce-motion .pb-poop,
+body.reduce-motion .pb-poop-alert,
+body.reduce-motion .pet.pb-poop-notice,
+body.reduce-motion .pet.pb-poop-notice * { animation-duration:.01ms !important; }
