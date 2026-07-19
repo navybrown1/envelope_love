@@ -1,4 +1,4 @@
-const CACHE = 'pocket-bloom-v4-natural-idle';
+const CACHE = 'pocket-bloom-v5-natural-life-poop';
 const ASSETS = [
   './',
   './index.html',
@@ -8,6 +8,8 @@ const ASSETS = [
   './cloud-sync.js',
   './idle-life.css',
   './idle-life.js',
+  './poop-life.css',
+  './poop-life.js',
   './payload/1.js',
   './payload/2.js',
   './payload/3.js',
