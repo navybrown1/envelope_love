@@ -19,14 +19,29 @@
     }
 
     const compressed = Uint8Array.from(atob(encoded), character => character.charCodeAt(0));
-    const decompressed = new Blob([compressed])
-      .stream()
-      .pipeThrough(new DecompressionStream('gzip'));
-    const html = await new Response(decompressed).text();
+    const decompressed = new Blob([compressed]).stream().pipeThrough(new DecompressionStream('gzip'));
+    let html = await new Response(decompressed).text();
 
-    if (!html.includes('<title>Pocket Bloom</title>')) {
-      throw new Error('The game package could not be verified.');
-    }
+    if (!html.includes('<title>Pocket Bloom</title>')) throw new Error('The game package could not be verified.');
+
+    const cloudStyles = `<style>
+      .cloud-card{margin:18px 0;padding:16px;border:2px solid rgba(99,79,130,.16);border-radius:20px;background:linear-gradient(145deg,#f4efff,#fff7fc)}
+      .cloud-head{display:flex;align-items:center;justify-content:space-between;gap:12px}.cloud-head div{display:grid;gap:3px}.cloud-head small{font-weight:800;color:#766b83}.cloud-head small[data-tone="good"]{color:#268861}.cloud-head small[data-tone="warn"]{color:#b66b20}
+      .cloud-help{font-size:.86rem;line-height:1.45;margin:12px 0;color:#62566d}.pocket-key{display:block;overflow-wrap:anywhere;padding:11px;border-radius:12px;background:#30283c;color:#fff;font-size:.78rem;letter-spacing:.05em;text-align:center}
+      .cloud-button{border:0;border-radius:999px;padding:9px 13px;background:#7556c9;color:#fff;font-weight:900;cursor:pointer}.cloud-button.wide{width:100%;margin-top:9px}.cloud-import{margin-top:12px}.cloud-import summary{cursor:pointer;font-weight:850}.cloud-import input{width:100%;margin-top:10px;font-size:.75rem}
+    </style><script src="cloud-sync.js"></script>`;
+    html = html.replace('</head>', `${cloudStyles}</head>`);
+    html = html.replace(
+      '<p>Your companion lives only in this browser. Progress is stored locally on your device.</p><div class="settings-list">',
+      `<p>Your companion is saved locally and securely synchronized through Pocket Bloom Cloud.</p>
+      <section class="cloud-card" aria-label="Cloud synchronization">
+        <div class="cloud-head"><div><strong>☁️ Pocket Bloom Cloud</strong><small id="cloudStatus">Connecting…</small></div><button class="cloud-button" id="syncNow">Sync now</button></div>
+        <p class="cloud-help">Use this private Pocket Key on another phone or computer to continue with the exact same pet.</p>
+        <code class="pocket-key" id="pocketKey">Generating…</code>
+        <button class="cloud-button wide" id="copyPocketKey">Copy Pocket Key</button>
+        <details class="cloud-import"><summary>Connect another Pocket Key</summary><input class="name-input" id="importPocketKey" autocomplete="off" autocapitalize="characters" placeholder="XXXX-XXXX-XXXX-XXXX-XXXX-XXXX-XXXX-XXXX"><button class="cloud-button wide" id="usePocketKey">Load this cloud pet</button></details>
+      </section><div class="settings-list">`
+    );
 
     document.open();
     document.write(html);
