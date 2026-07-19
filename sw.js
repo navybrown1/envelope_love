@@ -1,4 +1,4 @@
-const CACHE = 'pocket-bloom-v3-csp-fix';
+const CACHE = 'pocket-bloom-v4-natural-idle';
 const ASSETS = [
   './',
   './index.html',
@@ -6,6 +6,8 @@ const ASSETS = [
   './favicon.svg',
   './loader.js',
   './cloud-sync.js',
+  './idle-life.css',
+  './idle-life.js',
   './payload/1.js',
   './payload/2.js',
   './payload/3.js',
