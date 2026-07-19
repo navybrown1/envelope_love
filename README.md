@@ -15,8 +15,22 @@ Pocket Bloom is an original, animated browser-based virtual-pet experience inspi
 - Explore multiple colorful environments
 - Play the Catch the Starlight mini-game
 - Unlock achievements and maintain care streaks
-- Keep progress locally, including realistic offline stat changes
+- Continue progressing while the app is closed through realistic offline stat changes
 - Install it as a mobile-friendly Progressive Web App
+
+## Pocket Bloom Cloud
+
+Pocket Bloom uses a dedicated Supabase project for persistent, cross-device saves.
+
+- Every installation receives a cryptographically random 128-bit Pocket Key
+- The raw Pocket Key is never stored in the database; only its SHA-256 hash is retained
+- Local progress remains available offline and is synchronized when connectivity returns
+- Optimistic revision checks prevent silent overwrites between devices
+- Existing local pets are migrated automatically on first cloud connection
+- A clean device restores the cloud pet before its temporary starter egg can be uploaded
+- Local backups are created before a remote save replaces the current device state
+
+To continue on another device, open **Settings**, copy the private Pocket Key, and enter it under **Connect another Pocket Key**. Anyone with this key can access that pet, so it should be protected like a password.
 
 ## Run locally
 
