@@ -7,6 +7,21 @@
   const MAX_DELAY = 26000;
   const LONG_PAUSE_CHANCE = 0.14;
 
+  const loadPoopLayer = () => {
+    if (!document.querySelector('link[href="poop-life.css"]')) {
+      const link = document.createElement('link');
+      link.rel = 'stylesheet';
+      link.href = 'poop-life.css';
+      document.head.appendChild(link);
+    }
+    if (!document.querySelector('script[src="poop-life.js"]')) {
+      const script = document.createElement('script');
+      script.src = 'poop-life.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    }
+  };
+
   const durations = {
     blink: 760,
     'look-left': 1280,
@@ -52,6 +67,9 @@
     const hour = new Date().getHours();
     const lowNeed = Math.min(state.hunger ?? 100, state.water ?? 100, state.joy ?? 100, state.energy ?? 100, state.clean ?? 100);
 
+    if ((state.poopCount ?? 0) > 0) {
+      return ['sniff', 'sigh', 'look-left', 'look-right', 'scratch', 'blink'];
+    }
     if (state.sick || (state.health ?? 100) < 40) {
       return ['blink', 'sigh', 'shiver', 'look-left', 'look-right', 'breathe'];
     }
@@ -82,7 +100,7 @@
     let pool = poolFor(state).filter(name => !recent.includes(name));
     if (!pool.length) pool = poolFor(state);
 
-    const healthyAndHappy = !state.sick && (state.energy ?? 0) > 50 && (state.joy ?? 0) > 60;
+    const healthyAndHappy = !state.sick && !(state.poopCount > 0) && (state.energy ?? 0) > 50 && (state.joy ?? 0) > 60;
     if (healthyAndHappy && Math.random() < 0.08) {
       pool = state.stage === 'adult' ? ['daydream', 'dance'] : ['dance', 'hop'];
     }
@@ -180,6 +198,7 @@
     status: () => ({ active: activeIdle, recent: [...recent] }),
   });
 
+  loadPoopLayer();
   const start = () => schedule(6500 + Math.random() * 7000);
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start, { once: true });
   else start();
