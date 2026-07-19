@@ -8,132 +8,20 @@
   <title>Pocket Bloom</title>
   <link rel="manifest" href="manifest.webmanifest" />
   <link rel="icon" href="favicon.svg" type="image/svg+xml" />
-  <link rel="stylesheet" href="styles.css" />
+  <style>
+    *{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;padding:24px;background:radial-gradient(circle at 20% 15%,#fff6bc 0 8%,transparent 9%),radial-gradient(circle at 85% 22%,#c7f1ff 0 10%,transparent 11%),linear-gradient(145deg,#ffeaf4,#e9dcff 52%,#fff8cf);font-family:ui-rounded,"SF Pro Rounded",system-ui,sans-serif;color:#3a2945}.loading{width:min(430px,100%);padding:40px 28px;border:2px solid rgba(255,255,255,.8);border-radius:34px;background:rgba(255,255,255,.7);box-shadow:0 28px 80px rgba(87,45,105,.2);backdrop-filter:blur(16px);text-align:center}.loading-egg{width:92px;height:116px;margin:0 auto 22px;border:7px solid #3a2945;border-radius:50% 50% 46% 46%;background:linear-gradient(145deg,#fffbe2 0 44%,#ffd8eb 45% 60%,#fffbe2 61%);box-shadow:inset 12px 10px rgba(255,255,255,.65),0 14px 0 rgba(58,41,69,.12);animation:wobble 1.05s ease-in-out infinite}.loading h1{margin:0;font-size:clamp(34px,9vw,52px);letter-spacing:-.055em}.loading p{margin:12px 0 0;font-weight:700;color:#765b81}@keyframes wobble{0%,100%{transform:rotate(-4deg) translateY(0)}50%{transform:rotate(5deg) translateY(-8px)}}@media(prefers-reduced-motion:reduce){.loading-egg{animation:none}}
+  </style>
 </head>
 <body>
-  <div class="sky-decor" aria-hidden="true">
-    <div class="orb"></div><div class="orb"></div><div class="orb"></div><div class="orb"></div>
-    <div class="star s1"></div><div class="star s2"></div><div class="star s3"></div>
-  </div>
-
-  <div class="intro-overlay" id="intro">
-    <div class="intro-card">
-      <div class="intro-logo" aria-hidden="true"></div>
-      <h2>Pocket<br>Bloom</h2>
-      <p>A tiny life is waiting inside. Warm the egg, care for what hatches, and see who it becomes.</p>
-      <button id="enterGame">Wake the egg ✨</button>
-    </div>
-  </div>
-
-  <main class="app">
-    <header class="topbar">
-      <div class="brand">
-        <div class="brand-mark"><span>🥚</span></div>
-        <div><h1>Pocket Bloom</h1><p>Your tiny world, growing with you</p></div>
-      </div>
-      <div class="top-actions">
-        <button class="icon-button" id="achievementsButton" aria-label="Achievements">🏆</button>
-        <button class="icon-button" id="soundButton" aria-label="Toggle sound">🔊</button>
-        <button class="icon-button" id="settingsButton" aria-label="Settings">⚙️</button>
-      </div>
-    </header>
-
-    <section class="layout">
-      <div class="device-wrap">
-        <article class="device" aria-label="Pocket Bloom virtual pet device">
-          <div class="device-speckles" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
-          <div class="device-label"><strong>Pocket Bloom</strong><span>Original virtual companion</span></div>
-          <div class="screen-frame">
-            <div class="screen" id="screen">
-              <div class="scene" id="scene" data-env="meadow">
-                <div class="pixel-sun"></div><div class="pixel-cloud"></div><div class="pixel-tree"></div><div class="pixel-flower"></div><div class="pixel-wave"></div><div class="pixel-moon"></div><div class="pixel-planet"></div>
-              </div>
-              <div class="screen-top">
-                <span class="screen-chip"><span class="status-dot"></span><span id="screenStage">EGG</span></span>
-                <span class="screen-chip" id="screenClock">DAY 1</span>
-              </div>
-              <div class="pet-stage" id="petStage">
-                <div class="shadow-pixel"></div>
-                <div class="egg" id="egg" role="button" tabindex="0" aria-label="Warm the egg"></div>
-                <div class="pet" id="pet" aria-label="Your virtual pet">
-                  <div class="ear left"></div><div class="ear right"></div><div class="tail"></div>
-                  <div class="pet-body"></div><div class="eye left"></div><div class="eye right"></div>
-                  <div class="cheek left"></div><div class="cheek right"></div><div class="mouth"></div>
-                  <div class="leg left"></div><div class="leg right"></div>
-                </div>
-                <div class="activity-layer" id="activityLayer" aria-hidden="true"></div>
-              </div>
-              <div class="screen-message" id="screenMessage">Tap the egg to warm it • 0%</div>
-              <div class="scanlines"></div><div class="screen-flash" id="screenFlash"></div>
-            </div>
-          </div>
-          <div class="buttons" aria-label="Classic device buttons">
-            <button class="device-button" data-device-action="prev" aria-label="Previous action">◀</button>
-            <button class="device-button" data-device-action="select" aria-label="Select action">●</button>
-            <button class="device-button" data-device-action="next" aria-label="Next action">▶</button>
-          </div>
-        </article>
-      </div>
-
-      <aside class="side">
-        <section class="card">
-          <div class="profile-row">
-            <div class="pet-id"><small>Your companion</small><h2 id="petName">Little Egg</h2></div>
-            <span class="stage-badge" id="stageBadge">Warming up</span>
-          </div>
-          <div class="stats">
-            <div class="stat"><div class="stat-label"><span>🍙</span> Hunger</div><div class="bar"><span id="hungerBar"></span></div><div class="stat-value" id="hungerValue">100</div></div>
-            <div class="stat"><div class="stat-label"><span>💧</span> Water</div><div class="bar"><span id="waterBar"></span></div><div class="stat-value" id="waterValue">100</div></div>
-            <div class="stat"><div class="stat-label"><span>✨</span> Joy</div><div class="bar"><span id="joyBar"></span></div><div class="stat-value" id="joyValue">100</div></div>
-            <div class="stat"><div class="stat-label"><span>⚡</span> Energy</div><div class="bar"><span id="energyBar"></span></div><div class="stat-value" id="energyValue">100</div></div>
-            <div class="stat"><div class="stat-label"><span>🫧</span> Clean</div><div class="bar"><span id="cleanBar"></span></div><div class="stat-value" id="cleanValue">100</div></div>
-          </div>
-        </section>
-
-        <section class="card">
-          <div class="actions-title"><h3>Take care of your friend</h3><span id="selectedActionLabel">Feed selected</span></div>
-          <div class="action-grid" id="actionGrid">
-            <button class="action" data-action="feed"><span class="action-icon">🍙</span><span>Feed</span></button>
-            <button class="action" data-action="water"><span class="action-icon">💧</span><span>Water</span></button>
-            <button class="action" data-action="play"><span class="action-icon">🪀</span><span>Play</span></button>
-            <button class="action" data-action="clean"><span class="action-icon">🫧</span><span>Clean</span></button>
-            <button class="action" data-action="sleep"><span class="action-icon">🌙</span><span>Sleep</span></button>
-            <button class="action" data-action="medicine"><span class="action-icon">💊</span><span>Medicine</span></button>
-            <button class="action" data-action="explore"><span class="action-icon">🌈</span><span>Explore</span></button>
-            <button class="action" data-action="love"><span class="action-icon">💖</span><span>Love</span></button>
-          </div>
-        </section>
-
-        <section class="lower-grid">
-          <div class="mini-card"><small>Care streak</small><strong id="careStreak">0 days</strong><div class="event-log" id="eventLog">A new little life is waiting.</div></div>
-          <div class="mini-card"><small>Growing toward</small><strong id="growthHint">A mystery</strong><div class="event-log" id="careQuality">Warm the egg gently to begin.</div></div>
-        </section>
-      </aside>
-    </section>
+  <main class="loading" aria-live="polite">
+    <div class="loading-egg" aria-hidden="true"></div>
+    <h1>Pocket Bloom</h1>
+    <p>Waking your tiny world…</p>
   </main>
-
-  <div class="toast" id="toast" role="status" aria-live="polite"></div>
-
-  <div class="modal" id="nameModal" aria-hidden="true">
-    <div class="modal-card hatch-panel">
-      <div class="big-egg">🐣</div><h3>Your friend hatched!</h3><p>This tiny companion will grow based on your care. What should we call it?</p>
-      <input class="name-input" id="nameInput" maxlength="14" value="Mochi" aria-label="Pet name" />
-      <button class="primary-button" id="saveName">Begin your adventure</button>
-    </div>
-  </div>
-
-  <div class="modal" id="gameModal" aria-hidden="true">
-    <div class="modal-card"><button class="close-modal" data-close="gameModal">✕</button><h3>Catch the starlight</h3><p>Tap as many stars as you can before time runs out. Every sparkle makes your friend happier.</p><div class="game-hud"><span>Score: <b id="gameScore">0</b></span><span>Time: <b id="gameTime">15</b>s</span></div><div class="game-area" id="gameArea"></div><button class="primary-button" id="startGame">Start game</button></div>
-  </div>
-
-  <div class="modal" id="achievementsModal" aria-hidden="true">
-    <div class="modal-card"><button class="close-modal" data-close="achievementsModal">✕</button><h3>Little memories</h3><p>Moments your companion will remember.</p><div class="achievements" id="achievementList"></div></div>
-  </div>
-
-  <div class="modal" id="settingsModal" aria-hidden="true">
-    <div class="modal-card"><button class="close-modal" data-close="settingsModal">✕</button><h3>Settings</h3><p>Your companion lives only in this browser. Progress is stored locally on your device.</p><div class="settings-list"><div class="setting"><div><strong>Sound effects</strong><br><small>Gentle generated chimes</small></div><button class="toggle on" id="soundToggle" aria-label="Toggle sound"></button></div><div class="setting"><div><strong>Reduce motion</strong><br><small>Calmer animation</small></div><button class="toggle" id="motionToggle" aria-label="Toggle reduced motion"></button></div></div><button class="danger-button" id="resetGame">Start over with a new egg</button></div>
-  </div>
-
-  <script src="app.js" defer></script>
+  <script src="payload/1.js"></script>
+  <script src="payload/2.js"></script>
+  <script src="payload/3.js"></script>
+  <script src="payload/4.js"></script>
+  <script src="loader.js"></script>
 </body>
 </html>
